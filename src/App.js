@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './styles.css';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
  
@@ -25,6 +25,16 @@ const data = [
     "title": "interns-performance-report-june-2021.key"
   }
 ];
+  function Popup1() {
+    return (
+        <div>
+            <h4>Popup - GeeksforGeeks</h4>
+            <Popup trigger={<button> Trigger</button>} position="right center">
+    <div>Popup content here !!</div>
+  </Popup>
+        </div>
+    )
+};
 function App() {
   const m = 4;
   const [itemno, setitemno] = useState(0);
@@ -81,7 +91,7 @@ function App() {
     getslideno();
     return buttonarray.map((pageno) => { 
       // console.log(pageno);
-      if(pageno==Math.floor(itemno/m)*m)
+      if(pageno==Math.floor(itemno/m))
       {
         return (
           <button className="w3-button demo active"
@@ -101,16 +111,7 @@ function App() {
     });
   };
 
-//   function Popup1() {
-//     return (
-//         <div>
-//             <h4>Popup - GeeksforGeeks</h4>
-//             <Popup trigger={<button> Trigger</button>} position="right center">
-//     <div>Popup content here !!</div>
-//   </Popup>
-//         </div>
-//     )
-// };
+
 
   const plusDivs = (flag) => {
     console.log('plus Divs', itemno)
@@ -155,10 +156,10 @@ function App() {
       } else if (event.key === 'ArrowDown') {
         scroll(1);
       }
-      // else if(event.key==='Enter')
-      // {
-      //   Popup1();
-      // }
+      else if(event.key==='Enter')
+      {
+        Popup1();
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
