@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+ 
 const data = [
   {
     "previewImage": "https://images.unsplash.com/photo-1561948955-570b270e7c36?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
@@ -23,136 +25,147 @@ const data = [
     "title": "interns-performance-report-june-2021.key"
   }
 ];
-
 function App() {
   const m = 4;
-  const [n, setN] = useState(0);
+  const [itemno, setitemno] = useState(0);
+  const [curr, setcurr] = useState(0);
   const siz = data.length;
-  const x = [0, 1, 2, 3];
-  const [selectedOption, setSelectedOption] = useState(data[seq(m, n, siz, 0)]);
-  const [dataindexoptions, setdataindexOptions] = useState([0, 1, 2, 3]);
-  const [buttonText, setButtonText] = useState(1);
-  const [currentIndex, setcurrentIndex] = useState(0);
-
-  function seq(m, n, siz, x) {
-    return (m * (n) + x) % siz;
+  let x = [];
+  const makearr = () => {
+    let init = Math.floor(itemno / m) * 4;
+    // addingDesignToOptions();
+    for (let i = 0; i < 4; i++) {
+      x.push((init));
+      init++;
+    }
+    // console.log(x);
   }
+  let buttonarray = [];
 
-
-  const handleOptionClick = (index, currentIndex1) => {
-    setSelectedOption(data[index]);
-    setcurrentIndex(currentIndex1);
-
-    console.log('handleoptionclick is running');
-  };
-
-
-
-  const plusDivs = (grade) => {
-    if (grade == -1) {
-      if (n < 3)
-        return;
-      else
-        setN(n - 3);
+  const getslideno = () => {
+    let curr = Math.floor(itemno / (3 * m)) * 3;
+    for (let i = 0; i < 3; i++) {
+      buttonarray.push(curr);
+      curr++;
     }
-    else {
-      if (n > 11)
-        return;
-      else
-        setN(n + 3);
-    }
-    setcurrentIndex(0);
-    setButtonText((prevButtonText) => prevButtonText + grade * 3);
-    setdataindexOptions(x.map(
-      index => {
-        return seq(m, n, siz, index);
-      }
-    ));
-    setSelectedOption(data[seq(m, n, siz, 0)]);
-    console.log('plusdivs is running');
-  };
-
-
-  const handlebuttonclick = (i) => {
-    setN(i);
-    console.log('it is ', i);
-    console.log('it is ', n);
-    setdataindexOptions(x.map(
-      index => {
-        return seq(m, n, siz, index);
-      }
-    ));
-    setSelectedOption(data[seq(m, n, siz, 0)]);
-    console.log('handlebuttonclick is running');
-    setcurrentIndex(0);
   }
-
-
-  function scroll(i) {
-    if (i === 1) {
-      if (currentIndex >= m) {
-        setcurrentIndex(0);
-        setSelectedOption(0);
-      } else {
-        setcurrentIndex(currentIndex + 1);
-        setSelectedOption(currentIndex + 1);
-      }
-    }
-    else {
-      if (currentIndex === 0) {
-        setcurrentIndex(m - 1);
-        setSelectedOption(m - 1);
-      }
-      else {
-        setcurrentIndex(currentIndex - 1);
-        setSelectedOption(currentIndex - 1);
-      }
-    }
-    console.log('scroll is running');
-
-  }
-
-  // useEffect(() => {
-  //   const handleKeyDown = (event) => {
-  //     if (event.key === 'ArrowLeft') {
-  //       plusDivs(-1);
-  //     } else if (event.key === 'ArrowRight') {
-  //       plusDivs(1);
-  //     }
-  //     else if(event.key === 'ArrowUp')
-  //     {
-  //       scroll(-1);
-  //     }
-  //     else if(event.key === 'ArrowDown')
-  //     {
-  //       scroll(1);
-  //     }
-  //   };
-  //   window.addEventListener('keydown', handleKeyDown);
-  //   return () => {
-  //     window.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, []);
-
-
+  let l1 = 0;
   const funcdataindexoptions = () => {
     console.log('funcdataindexoptions is running');
-
-    return dataindexoptions.map((index, currentIndex1) => { // Add the "currentIndex" parameter
-      console.log(index);
-      
+    makearr();
+    return x.map((item) => { 
+      console.log(item);
+      if (item == itemno) {
+        return (
+          <li key={item} className='active' onClick={() => {
+            setitemno(item)
+          }}>
+            <img src={data[item % siz]?.previewImage} alt="Preview" />
+            <label>{data[item % siz]?.title}</label>
+          </li>
+        );
+      }
       return (
-        <li key={index} onClick={() => handleOptionClick(index, currentIndex1)}>
-          <img src={data[index]?.previewImage} alt="Preview" />
-          <label>{data[index]?.title}</label>
-          {/* setcurrentIndex(currentIndex1); */}
-          <span>Current Index: {currentIndex1}</span> {/* Display the current index */}
+        <li key={item} onClick={() => {
+          setitemno(item)
+        }}>
+          <img src={data[item % siz]?.previewImage} alt="Preview" />
+          <label>{data[item % siz]?.title}</label>
         </li>
       );
     });
   };
 
-  // index database bss
+  const makeoptions = () => {
+    console.log('makeoptions is running');
+    getslideno();
+    return buttonarray.map((pageno) => { 
+      // console.log(pageno);
+      if(pageno==Math.floor(itemno/m)*m)
+      {
+        return (
+          <button className="w3-button demo active"
+            key={pageno}
+            onClick={() => { setitemno(pageno * m) }}>
+            {pageno+1}</button>
+        
+        );
+      }
+      return (
+        <button className="w3-button demo"
+          key={pageno}
+          onClick={() => { setitemno(pageno * m) }}>
+          {pageno+1}</button>
+      
+      );
+    });
+  };
+
+//   function Popup1() {
+//     return (
+//         <div>
+//             <h4>Popup - GeeksforGeeks</h4>
+//             <Popup trigger={<button> Trigger</button>} position="right center">
+//     <div>Popup content here !!</div>
+//   </Popup>
+//         </div>
+//     )
+// };
+
+  const plusDivs = (flag) => {
+    console.log('plus Divs', itemno)
+    if (flag == -1) {
+      if (itemno <= 3)
+        return;
+      setitemno((itemno) => { return Math.floor((itemno / (m)) - 1) * m });
+    }
+    else {
+      if (itemno >= 14 * m)
+        return;
+      setitemno((itemno) => { return Math.floor((itemno / (m)) + 1) * m });
+    }
+  }
+  const scroll = (flag) => {
+    console.log(itemno ,"herieir");
+    if (flag == 1) {
+      if (itemno % m === m - 1) {
+        console.log('this is happening')
+        setitemno(itemno => Math.floor(itemno / m) * m);
+      }
+      else
+        setitemno(itemno => itemno + 1);
+
+    }
+    else if (flag == -1) {
+      if (itemno % m == 0)
+        setitemno(itemno => itemno + m - 1);
+      else
+        setitemno(itemno => itemno - 1);
+
+    }
+  }
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'ArrowLeft') {
+        plusDivs(-1);
+      } else if (event.key === 'ArrowRight') {
+        plusDivs(1);
+      } else if (event.key === 'ArrowUp') {
+        scroll(-1);
+      } else if (event.key === 'ArrowDown') {
+        scroll(1);
+      }
+      // else if(event.key==='Enter')
+      // {
+      //   Popup1();
+      // }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [itemno]);
 
   return (
     <div className="App">
@@ -167,20 +180,19 @@ function App() {
             <button className="w3-button" onClick={() => plusDivs(-1)}>
               &#10094;
             </button>
-            <button className="w3-button demo" onClick={() => { console.log(buttonText, 'is pressed'); handlebuttonclick(buttonText - 1) }}>{buttonText}</button>
-            <button className="w3-button demo" onClick={() => { console.log(buttonText + 1, 'is pressed'); handlebuttonclick(buttonText) }}>{buttonText + 1}</button>
-            <button className="w3-button demo" onClick={() => { console.log(buttonText + 2, 'is pressed'); handlebuttonclick(buttonText + 1) }}>{buttonText + 2}</button>
+            {makeoptions()}
             <button className="w3-button" onClick={() => plusDivs(1)}>
               &#10095;
             </button>
           </div>
         </div>
+        
         <div className="space"></div>
         <div id="rightpane">
           <div id="imgframe">
-            <img className="mainpic" alt="" src={selectedOption.previewImage} />
+            <img className="mainpic" alt="" src={data[itemno % siz].previewImage} />
           </div>
-          <div id="imgname" >{selectedOption.title}</div>
+          <div id="imgname" >{data[itemno % siz].title}</div>
         </div>
       </div>
     </div>

@@ -68,6 +68,7 @@ button {
   border-radius: 50%;
   width: 2rem;
   height: 2rem;
+  margin: 1%;
   background-color: lightgrey;
   color: black;
   font-weight: bold;
@@ -112,6 +113,11 @@ button.active {
 /* display: flex; */
 text-align: center;
 /* width: 50px; */
+}
+label{
+  display: flex;
+  margin-left: 3%;
+  margin-top: 3%;
 }
 .popup {
 display: none;
